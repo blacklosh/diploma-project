@@ -71,6 +71,8 @@ public class LiquibaseDefinitionWriter {
                     "http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd");
             xmlw.writeCharacters("\n\n");
 
+            String author = GlobalParamsUtil.getProperty("USERNAME");
+
             /**
              * ADDING NEW TABLES
              */
@@ -78,7 +80,7 @@ public class LiquibaseDefinitionWriter {
             if(changes.getNewTables() != null && changes.getNewTables().size() > 0) {
                 xmlw.writeStartElement("changeSet");
                 xmlw.writeAttribute("id", UUID.randomUUID().toString());
-                xmlw.writeAttribute("author", GlobalParamsUtil.getUsername());
+                xmlw.writeAttribute("author", author);
                 xmlw.writeCharacters("\n");
                 for (TableEntity table : changes.getNewTables()) {
                     xmlw.writeStartElement("createTable");
@@ -106,7 +108,7 @@ public class LiquibaseDefinitionWriter {
             if(changes.getNewColumns() != null && changes.getNewColumns().size() > 0) {
                 xmlw.writeStartElement("changeSet");
                 xmlw.writeAttribute("id", UUID.randomUUID().toString());
-                xmlw.writeAttribute("author", GlobalParamsUtil.getUsername());
+                xmlw.writeAttribute("author", author);
                 xmlw.writeCharacters("\n");
                 for(ColumnEntity column : changes.getNewColumns()) {
                     xmlw.writeStartElement("addColumn");
@@ -133,7 +135,7 @@ public class LiquibaseDefinitionWriter {
             if(changes.getChangedColumns() != null && changes.getChangedColumns().size() > 0) {
                 xmlw.writeStartElement("changeSet");
                 xmlw.writeAttribute("id", UUID.randomUUID().toString());
-                xmlw.writeAttribute("author", GlobalParamsUtil.getUsername());
+                xmlw.writeAttribute("author", author);
                 xmlw.writeCharacters("\n");
                 for (ColumnEntity column : changes.getChangedColumns()) {
                     xmlw.writeStartElement("modifyDataType");
@@ -155,7 +157,7 @@ public class LiquibaseDefinitionWriter {
             if(changes.getDeletedColumns() != null && changes.getDeletedColumns().size() > 0) {
                 xmlw.writeStartElement("changeSet");
                 xmlw.writeAttribute("id", UUID.randomUUID().toString());
-                xmlw.writeAttribute("author", GlobalParamsUtil.getUsername());
+                xmlw.writeAttribute("author", author);
                 xmlw.writeCharacters("\n");
                 for (ColumnEntity column : changes.getDeletedColumns()) {
                     xmlw.writeStartElement("dropColumn");
@@ -175,7 +177,7 @@ public class LiquibaseDefinitionWriter {
             if(changes.getDeletedTables() != null && changes.getDeletedTables().size() > 0) {
                 xmlw.writeStartElement("changeSet");
                 xmlw.writeAttribute("id", UUID.randomUUID().toString());
-                xmlw.writeAttribute("author", GlobalParamsUtil.getUsername());
+                xmlw.writeAttribute("author", author);
                 xmlw.writeCharacters("\n");
                 for (TableEntity table : changes.getDeletedTables()) {
                     xmlw.writeStartElement("dropTable");

@@ -90,7 +90,6 @@ public class LiquibaseDefinitionReader {
                                     "",
                                     tableName
                             );
-                            System.out.println("пытаемся удалить столбец " + column.getColumnName());
                             previousTable.getColumns().remove(newColumn);
                         }
                     }
