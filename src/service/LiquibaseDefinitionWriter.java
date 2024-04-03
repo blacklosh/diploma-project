@@ -1,7 +1,6 @@
 package service;
 
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
-import lombok.experimental.UtilityClass;
 import model.ChangesModel;
 import model.ColumnEntity;
 import model.TableEntity;
@@ -16,9 +15,19 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.UUID;
 
-@UtilityClass
+/**
+ * Модуль записи обновлений конфигурации Liquibase
+ * @version 1.0
+ * @author Fedor Gusev
+ */
+
 public class LiquibaseDefinitionWriter {
 
+    /**
+     * Добавить запись в основной файл миграции
+     * @param master основной файл миграции
+     * @param newFile название нового файла миграции, который нужно внести в основной
+     */
     public void appendMasterChangelogFile(File master, File newFile) {
         try {
             XmlMapper xmlMapper = new XmlMapper();
@@ -54,9 +63,16 @@ public class LiquibaseDefinitionWriter {
 
     }
 
+    /**
+     * Записать все изменения в новый файл миграции
+     * @param newChangelog файл миграции
+     * @param changes все изменения
+     */
     public void createNewChangeLogFile(File newChangelog, ChangesModel changes) {
         try {
-            newChangelog.createNewFile();
+            if(!newChangelog.createNewFile()) {
+                throw new RuntimeException("Cannot create changeset file!");
+            }
 
             XMLOutputFactory factory1 = XMLOutputFactory.newFactory();
             XMLStreamWriter xmlw = factory1.createXMLStreamWriter(new FileOutputStream(newChangelog));
@@ -73,7 +89,7 @@ public class LiquibaseDefinitionWriter {
 
             String author = GlobalParamsUtil.getProperty("USERNAME");
 
-            /**
+            /*
              * ADDING NEW TABLES
              */
 
@@ -101,7 +117,7 @@ public class LiquibaseDefinitionWriter {
                 xmlw.writeCharacters("\n\n");
             }
 
-            /**
+            /*
              * ADDING NEW COLUMNS
              */
 
@@ -128,7 +144,7 @@ public class LiquibaseDefinitionWriter {
                 xmlw.writeCharacters("\n\n");
             }
 
-            /**
+            /*
              * CHANGING COLUMNS
              */
 
@@ -150,7 +166,7 @@ public class LiquibaseDefinitionWriter {
             }
 
 
-            /**
+            /*
              * DELETING COLUMNS
              */
 
@@ -170,7 +186,7 @@ public class LiquibaseDefinitionWriter {
                 xmlw.writeCharacters("\n\n");
             }
 
-            /**
+            /*
              * DELETING TABLES
              */
 

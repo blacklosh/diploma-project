@@ -14,8 +14,19 @@ import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * Модуль считывания метаданных моделей из .java классов
+ * @version 1.0
+ * @author Fedor Gusev
+ */
+
 public class JavaModelsDefinitionReader {
 
+    /**
+     * Считывание метаданных моделей
+     * @param filesWithModels список всех файлов, которые необходимо пройти
+     * @return множество таблиц со всеми полями и другими сущностями
+     */
     public Set<TableEntity> readJavaModels(File[] filesWithModels) {
         try {
             Set<TableEntity> resultSet = new HashSet<>();
@@ -46,6 +57,11 @@ public class JavaModelsDefinitionReader {
         }
     }
 
+    /**
+     * Конвертер типов
+     * @param javaType тип в классе .java
+     * @return тип для языка sql
+     */
     private String typeFormat(String javaType) {
         if("string".equals(javaType)) {
             return "varchar(255)";

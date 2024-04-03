@@ -19,9 +19,20 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+/**
+ * Модуль считывания метаданных конфигурации Liquibase
+ * @version 1.0
+ * @author Fedor Gusev
+ */
+
 public class LiquibaseDefinitionReader {
 
-    public Set<TableEntity> readXmlConfiguration(File mainChangesetFile, File changesetDir) {
+    /**
+     * Считать метаданные
+     * @param mainChangesetFile основной файл конфигурации миграций, в нём должны быть указаны все остальные
+     * @return множество таблиц со всеми полями и другими сущностями
+     */
+    public Set<TableEntity> readXmlConfiguration(File mainChangesetFile) {
         try {
             XmlMapper xmlMapper = new XmlMapper();
             XMLInputFactory factory = XMLInputFactory.newInstance();
@@ -85,12 +96,24 @@ public class LiquibaseDefinitionReader {
                             String tableName = column.getTableName().toLowerCase();
                             TableEntity previousTable = resultMap.get(tableName);
                             if(previousTable.getColumns() == null) previousTable.setColumns(new HashSet<>());
-                            ColumnEntity newColumn = new ColumnEntity(
-                                    column.getColumnName().toLowerCase(),
-                                    "",
-                                    tableName
-                            );
-                            previousTable.getColumns().remove(newColumn);
+                            if(column.getColumn() == null || column.getColumn().size() == 0) {
+                                ColumnEntity newColumn = new ColumnEntity(
+                                        column.getColumnName().toLowerCase(),
+                                        "",
+                                        tableName
+                                );
+                                previousTable.getColumns().remove(newColumn);
+                            } else {
+                                for(DatabaseChangeSet.Column c : column.getColumn()) {
+                                    ColumnEntity newColumn = new ColumnEntity(
+                                            c.getName().toLowerCase(),
+                                            c.getType(),
+                                            tableName
+                                    );
+                                    previousTable.getColumns().remove(newColumn);
+                                }
+                            }
+
                         }
                     }
 

@@ -7,6 +7,13 @@ import lombok.*;
 
 import java.util.List;
 
+/**
+ * Представление главного (master) файла ChangeSet для Liquibase.
+ * Содержит в себе список остальных файлов с миграциями
+ * @version 1.0
+ * @author Fedor Gusev
+ */
+
 @Data
 @Builder
 @ToString

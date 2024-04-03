@@ -6,8 +6,22 @@ import model.TableEntity;
 
 import java.util.*;
 
+/**
+ * Модуль сравнения метаданных.
+ * Позволяет сравнить метаданные, полученные из классов моделей
+ * с метаданными, полученными из конфигураций миграций.
+ * @version 1.0
+ * @author Fedor Gusev
+ */
+
 public class MigrationComparator {
 
+    /**
+     * Получить разницу
+     * @param migration исходник миграции
+     * @param entities состояние сущностей
+     * @return все изменения, которые нужно внести в миграцию
+     */
     public ChangesModel getDifference(Set<TableEntity> migration, Set<TableEntity> entities) {
         ChangesModel result = new ChangesModel();
         result.setNewColumns(new ArrayList<>());

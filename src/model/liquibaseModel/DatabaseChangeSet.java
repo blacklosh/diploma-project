@@ -7,6 +7,14 @@ import lombok.*;
 
 import java.util.List;
 
+/**
+ * Представление регулярного ChangeSet файла Liquibase.
+ * Содержит набор изменений, каждое из которых может содержать
+ * много различных записей изменений
+ * @version 1.0
+ * @author Fedor Gusev
+ */
+
 @Data
 @Builder
 @ToString
@@ -47,6 +55,12 @@ public class DatabaseChangeSet {
 
     }
 
+    /**
+     * Запись создания таблицы - содержит имя таблицы
+     * и список колонок, которые будет иметь таблица
+     * @version 1.0
+     * @author Fedor Gusev
+     */
     @Data
     @Builder
     @NoArgsConstructor
@@ -61,6 +75,12 @@ public class DatabaseChangeSet {
 
     }
 
+    /**
+     * Представление колонки для использования в других конструкциях xml.
+     * Содержит имя, тип значения и список ограничений
+     * @version 1.0
+     * @author Fedor Gusev
+     */
     @Data
     @Builder
     @NoArgsConstructor
@@ -79,6 +99,12 @@ public class DatabaseChangeSet {
 
     }
 
+    /**
+     * Представление ограничения для использования внутри xml колонки.
+     * В данной версии поддерживаются только ограничения первичного ключа и пустоты
+     * @version 1.0
+     * @author Fedor Gusev
+     */
     @Data
     @Builder
     @NoArgsConstructor
@@ -94,6 +120,12 @@ public class DatabaseChangeSet {
 
     }
 
+    /**
+     * Запись создания колонки - содержит имя целевой таблицы
+     * и список всех создаваемых колонок
+     * @version 1.0
+     * @author Fedor Gusev
+     */
     @Data
     @Builder
     @NoArgsConstructor
@@ -108,6 +140,13 @@ public class DatabaseChangeSet {
         private List<Column> column;
     }
 
+    /**
+     * Запись удаления колонки - содержит имя целевой таблицы
+     * и список всех удаляемых колонок.
+     * Если список удаляемых колонок пуст, то будет удалена колонка с именем columnName
+     * @version 1.0
+     * @author Fedor Gusev
+     */
     @Data
     @Builder
     @NoArgsConstructor
@@ -120,8 +159,17 @@ public class DatabaseChangeSet {
 
         @JacksonXmlProperty(isAttribute = true)
         private String columnName;
+
+        @JacksonXmlElementWrapper(useWrapping = false)
+        private List<Column> column;
     }
 
+    /**
+     * Запись удаления таблицы - содержит имя целевой таблицы,
+     * и указания взаимодействия с каскадным удалением ограничений
+     * @version 1.0
+     * @author Fedor Gusev
+     */
     @Data
     @Builder
     @NoArgsConstructor
@@ -136,6 +184,12 @@ public class DatabaseChangeSet {
         private String cascadeConstraints;
     }
 
+    /**
+     * Запись изменения типа колонки - содержит имя целевой таблицы,
+     * имя колонки columnName и новый тип newDataType
+     * @version 1.0
+     * @author Fedor Gusev
+     */
     @Data
     @Builder
     @NoArgsConstructor

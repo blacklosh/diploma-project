@@ -14,18 +14,22 @@ import java.util.UUID;
 
 public class Main {
     public static void main(String[] args) {
+
+        // Ниже представлен MVP процесса работы программы
+
         File master = new File(GlobalParamsUtil.getProperty("MASTER_CHANGELOG_FILE"));
         File changeSetDir = new File(GlobalParamsUtil.getProperty("CHANGELOG_DIR"));
 
+        // Читаем всё, что написано в миграции
         LiquibaseDefinitionReader reader = new LiquibaseDefinitionReader();
-
-        Set<TableEntity> result = reader.readXmlConfiguration(master, null);
+        Set<TableEntity> result = reader.readXmlConfiguration(master);
         System.out.println(result);
 
         System.out.println();
         System.out.println();
         System.out.println();
 
+        // Читаем всё, что написано в классах
         JavaModelsDefinitionReader reader2 = new JavaModelsDefinitionReader();
         File[] files = new File(GlobalParamsUtil.getProperty("MODELS_DIR")).listFiles();
         Set<TableEntity> result2 = reader2.readJavaModels(files);
@@ -35,6 +39,7 @@ public class Main {
         System.out.println();
         System.out.println();
 
+        // Сравниваем эти модели
         MigrationComparator migrationComparator = new MigrationComparator();
         ChangesModel changes = migrationComparator.getDifference(result, result2);
         System.out.println(changes.getNewTables());
@@ -42,12 +47,14 @@ public class Main {
         System.out.println(changes.getDeletedTables());
         System.out.println(changes.getDeletedColumns());
 
+        // Если есть разница, то записываем её в новый файл миграции
         if(!changes.isEmpty()) {
             String format = GlobalParamsUtil.getProperty("DATETIME_FORMAT");
             String timeStamp = new SimpleDateFormat(format).format(Calendar.getInstance().getTime());
             File newChangeLogFile = new File(changeSetDir.getAbsolutePath() + File.separator + timeStamp + "_" + UUID.randomUUID() + ".xml");
-            LiquibaseDefinitionWriter.appendMasterChangelogFile(master, newChangeLogFile);
-            LiquibaseDefinitionWriter.createNewChangeLogFile(newChangeLogFile, changes);
+            LiquibaseDefinitionWriter writer = new LiquibaseDefinitionWriter();
+            writer.appendMasterChangelogFile(master, newChangeLogFile);
+            writer.createNewChangeLogFile(newChangeLogFile, changes);
         }
     }
 }
